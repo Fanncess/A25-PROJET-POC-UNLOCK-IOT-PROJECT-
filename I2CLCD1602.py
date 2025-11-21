@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-########################################################################
-# Filename    : I2CLCD1602.py
-# Description : Use the LCD display data
-# Author      : freenove
-# modification: 2023/05/15
-########################################################################
-
 from time import sleep, strftime
 from CharLCD1602 import CharLCD1602
 
