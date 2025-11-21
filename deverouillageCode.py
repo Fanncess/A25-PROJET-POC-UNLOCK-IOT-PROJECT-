@@ -1,5 +1,8 @@
 from pad4pi import rpi_gpio
 import time
+from CharLCD1602 import CharLCD1602
+
+lcd1602 = CharLCD1602()
 
 CODE_SECRET = "1234"
 KEYPAD = [
@@ -53,5 +56,5 @@ while True :
     GPIO.output(RELAY_PIN, GPIO.HIGH)
     time.sleep(1)
     GPIO.output(RELAY_PIN, GPIO.LOW)
-    time.sleep(1)
+    time.sleep(1)1
 """
