@@ -4,7 +4,7 @@ from CharLCD1602 import CharLCD1602
 
 lcd1602 = CharLCD1602()
 
-CODE_SECRET = "1234"
+CODE_SECRET = "1234" 
 KEYPAD = [
     ['1', '2', '3', 'A'],
     ['4', '5', '6', 'B'],

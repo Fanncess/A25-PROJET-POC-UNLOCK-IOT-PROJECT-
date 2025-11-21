@@ -16,7 +16,7 @@ def get_cpu_temp():     # get CPU temperature from file "/sys/class/thermal/ther
 
     
 def loop():
-    lcd1602.init_lcd()
+    lcd1602.init_lcd() 
     count = 0
     while(True):
         lcd1602.clear()

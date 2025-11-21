@@ -115,7 +115,7 @@ class CharLCD1602(object):
     def display_num(self,x, y, num):
         addr = 0x80 + 0x40 * y + x
         self.send_command(addr)
-        self.send_data(num)
+        self.send_data(num) 
         
 def loop():
     count = 0
