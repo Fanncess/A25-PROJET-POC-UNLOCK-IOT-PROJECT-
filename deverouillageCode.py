@@ -3,6 +3,9 @@ import time
 from CharLCD1602 import CharLCD1602
 
 lcd1602 = CharLCD1602()
+lcd1602.init_lcd(addr=None, bl=1)
+lcd1602.write(0, 0, 'SYSTEME PRET')
+lcd1602.write(0, 1, 'ENtrer le code :')
 
 CODE_SECRET = "1234" 
 KEYPAD = [
@@ -20,6 +23,8 @@ keypad = factory.create_keypad(keypad=KEYPAD, row_pins=ROW_PINS, col_pins=COL_PI
 
 def key_pressed(key):
     global ENTERED_CODE
+    lcd1602.clear()
+
     if key == "*":
         ENTERED_CODE = ""
         print("Code réinitialisé.")
@@ -30,11 +35,19 @@ def key_pressed(key):
         return
 
     ENTERED_CODE += key
+    lcd1602.write(0, 0, 'Code: ' + '*' * len(ENTERED_CODE)) 
     
     if ENTERED_CODE == CODE_SECRET and len(ENTERED_CODE) == len(CODE_SECRET):
-        print("Code correct, déverrouillage...")
+        lcd1602.clear()
+        lcd1602.write(0, 0, 'Code correct!')
+        lcd1602.write(0, 1, 'Deverouille...')
     elif ENTERED_CODE != CODE_SECRET and len(ENTERED_CODE) == len(CODE_SECRET):
-        print("Code incorrect, essayez encore.")
+        lcd1602.clear()
+        lcd1602.write(0, 0, 'Code incorrect!')
+        lcd1602.write(0, 1, 'Reessayez...')
+    time.sleep(2)
+    ENTERED_CODE = ""
+    lcd1602.clear()
 
 keypad.registerKeyPressHandler(key_pressed)
 
