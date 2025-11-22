@@ -1,6 +1,14 @@
 from pad4pi import rpi_gpio
 import time
 from CharLCD1602 import CharLCD1602
+import RPi.GPIO as GPIO
+import time
+
+#CONFIGURER LE RELAIS
+RELAY_PIN = 17
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(RELAY_PIN, GPIO.OUT)
 
 #INITIALISER LE CODE
 lcd1602 = CharLCD1602()
@@ -37,11 +45,6 @@ def key_pressed(key):
         lcd1602.write(0,0,"Code reset")
         lcd1602.write(0,1,"Entrez le code")
         return
-    
-    if len(ENTERED_CODE) >= len(CODE_SECRET):
-        lcd1602.write(0,0,"Code trop long")
-        lcd1602.write(0,1,"Reset:*")
-        return
 
     ENTERED_CODE += str(key)
     lcd1602.write(0, 0, 'Code: ' + ENTERED_CODE)
@@ -51,34 +54,30 @@ def key_pressed(key):
             lcd1602.clear()
             lcd1602.write(0, 0, 'Code correct!')
             lcd1602.write(0, 1, 'Deverouille...')
+            GPIO.output(RELAY_PIN, GPIO.HIGH)
+            time.sleep(5)
         else:
             lcd1602.clear()
             lcd1602.write(0, 0, 'Code incorrect!')
             lcd1602.write(0, 1, 'Reessayez...')
     
-    time.sleep(2)
-    ENTERED_CODE = ""
-    lcd1602.clear()
-    lcd1602.write(0,0, "Entrez code:")
+        time.sleep(2)
+        ENTERED_CODE = ""
+        lcd1602.clear()
+        lcd1602.write(0,0, "Entrez le code:")
 
 keypad.registerKeyPressHandler(key_pressed)
 
-print ("Système de déverrouillage par code activé. Saisir '*' pour réinitialiser le code.")
-while True :
-    time.sleep(0.1) 
+
 
 
 """
-import RPi.GPIO as GPIO
-import time
 
-RELAY_PIN = 17
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(RELAY_PIN, GPIO.OUT)
+
 
 while True :
-    GPIO.output(RELAY_PIN, GPIO.HIGH)
+    
     time.sleep(1)
     GPIO.output(RELAY_PIN, GPIO.LOW)
     time.sleep(1)1
