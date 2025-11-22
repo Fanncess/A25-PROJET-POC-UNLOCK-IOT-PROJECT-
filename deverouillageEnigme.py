@@ -6,17 +6,24 @@ import time
 import subprocess
 
 #JOUER L'ENIGME VOCALE
-text = "Voici l'énigme ultime pour dévérouiller la porte. " \
+TEXT = "Voici l'énigme ultime pour dévérouiller la porte. " \
 "Quelle est la date de création du Cégep Beauce Appalaches?"
-proposition_reponses ="A. 1969" \
-"B. 1972" \
-"C. 1990"
-commande = [
+PROPOSITION ="A. 1969 OU B. 1972 OU C. 1990."
+COMMANDE_TEXT = [
     "espeak",
     "-v", "mb-fr1",
-    "-s", "150",
+    "-s", "130",
+    "-p", "30",
     "-a", "200",
-    text
+    TEXT
+]
+PROPOSITION_REPONSES = [
+    "espeak",
+    "-v", "mb-fr1",
+    "-s", "130",
+    "-p", "30",
+    "-a", "200",
+    PROPOSITION
 ]
 
 #CONFIGURER LE RELAIS
@@ -29,9 +36,9 @@ GPIO.output(RELAY_PIN, GPIO.LOW)
 lcd1602 = CharLCD1602()
 lcd1602.init_lcd(addr=None, bl=1)
 lcd1602.clear()
-subprocess.run(commande)
-subprocess.run(proposition_reponses)
-lcd1602.write(0, 1, 'Entrer la réponse:')
+subprocess.run(COMMANDE_TEXT)
+subprocess.run(PROPOSITION_REPONSES)
+lcd1602.write(0, 0, 'Entrer la reponse:')
 
 #CONFIGURER LE CODE SECRET
 REPONSE = "C" 
@@ -83,8 +90,8 @@ def key_pressed(key):
         time.sleep(2)
         ENTERED_CODE = ""
         lcd1602.clear()
-        subprocess.run(commande)
-        subprocess.run(proposition_reponses)
+        subprocess.run(COMMANDE_TEXT)
+        subprocess.run(PROPOSITION_REPONSES)
         lcd1602.write(0,0, "Entrez la reponse:")
 
 keypad.registerKeyPressHandler(key_pressed)
