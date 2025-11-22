@@ -1,10 +1,11 @@
 import subprocess
 
-text = "Je t'aime"
+text = "Voici l'énigme ultime pour déverouiller la porte. " \
+"Quelle est la date de création du Cégep Beauce Appalaches?"
 commande = [
     "espeak",
-    "-v", "fr+f1",
-    "-s", "140",
+    "-v", "mb-fr1",
+    "-s", "150",
     "-a", "200",
     text
 ]
