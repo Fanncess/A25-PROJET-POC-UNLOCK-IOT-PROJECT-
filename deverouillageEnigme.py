@@ -9,6 +9,8 @@ import subprocess
 TEXT = "Voici l'énigme ultime pour dévérouiller la porte. " \
 "Quelle est la date de création du Cégep Beauce Appalaches?"
 PROPOSITION ="A. 1969 OU B. 1972 OU C. 1990."
+BONNE_REPONSE = "Bonne réponse. Porte déverrouillée."
+MAUVAISE_REPONSE = "Mauvaise réponse. Essayez encore."
 COMMANDE_TEXT = [
     "espeak",
     "-v", "mb-fr1",
@@ -24,6 +26,22 @@ PROPOSITION_REPONSES = [
     "-p", "30",
     "-a", "200",
     PROPOSITION
+]
+ANNONCE_BONNE_REPONSE = [
+    "espeak",
+    "-v", "mb-fr1",
+    "-s", "130",
+    "-p", "30",
+    "-a", "200",
+    BONNE_REPONSE
+]
+ANNONCE_MAUVAISE_REPONSE= [
+    "espeak",
+    "-v", "mb-fr1",
+    "-s", "130",
+    "-p", "30",
+    "-a", "200",
+    MAUVAISE_REPONSE
 ]
 
 #CONFIGURER LE RELAIS
@@ -77,6 +95,7 @@ def key_pressed(key):
             lcd1602.clear()
             lcd1602.write(0, 0, 'Bonne reponse!')
             lcd1602.write(0, 1, 'Deverouille...')
+            subprocess.run(ANNONCE_BONNE_REPONSE)
             GPIO.output(RELAY_PIN, GPIO.HIGH)
             time.sleep(5)
             GPIO.output(RELAY_PIN, GPIO.LOW)
@@ -86,6 +105,7 @@ def key_pressed(key):
             lcd1602.clear()
             lcd1602.write(0, 0, 'Mauvaise reponse!')
             lcd1602.write(0, 1, 'Reessayez...')
+            subprocess.run(ANNONCE_MAUVAISE_REPONSE)
     
         time.sleep(2)
         ENTERED_CODE = ""
