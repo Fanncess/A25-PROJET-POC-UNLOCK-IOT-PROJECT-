@@ -4,6 +4,7 @@ from CharLCD1602 import CharLCD1602
 import RPi.GPIO as GPIO
 import time
 import subprocess
+from gpiozero import MotionSensor
 
 #JOUER L'ENIGME VOCALE
 TEXT = "Voici l'énigme ultime pour dévérouiller la porte. " \
@@ -50,13 +51,15 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(RELAY_PIN, GPIO.OUT)
 GPIO.output(RELAY_PIN, GPIO.LOW)
 
+#CONFIGURER LE CAPTEUR DE MOUVEMENT
+SENSOR_PIN = 18
+SENSOR = MotionSensor(SENSOR_PIN)
+time.sleep(2)  
+
 #INITIALISER LE CODE
 lcd1602 = CharLCD1602()
 lcd1602.init_lcd(addr=None, bl=1)
 lcd1602.clear()
-subprocess.run(COMMANDE_TEXT)
-subprocess.run(PROPOSITION_REPONSES)
-lcd1602.write(0, 0, 'Entrer la reponse:')
 
 #CONFIGURER LE CODE SECRET
 REPONSE = "C" 
@@ -93,31 +96,44 @@ def key_pressed(key):
     if len(ENTERED_CODE) == len(REPONSE):
         if ENTERED_CODE == REPONSE :
             lcd1602.clear()
-            lcd1602.write(0, 0, 'Bonne reponse!')
-            lcd1602.write(0, 1, 'Deverouille...')
-            subprocess.run(ANNONCE_BONNE_REPONSE)
-            GPIO.output(RELAY_PIN, GPIO.HIGH)
-            time.sleep(5)
-            GPIO.output(RELAY_PIN, GPIO.LOW)
-
-             
+            subprocess.run(ANNONCE_BONNE_REPONSE)    
+            ouvrir_porte()
         else:
             lcd1602.clear()
-            lcd1602.write(0, 0, 'Mauvaise reponse!')
-            lcd1602.write(0, 1, 'Reessayez...')
             subprocess.run(ANNONCE_MAUVAISE_REPONSE)
     
         time.sleep(2)
         ENTERED_CODE = ""
-        lcd1602.clear()
-        subprocess.run(COMMANDE_TEXT)
-        subprocess.run(PROPOSITION_REPONSES)
-        lcd1602.write(0,0, "Entrez la reponse:")
+
 
 keypad.registerKeyPressHandler(key_pressed)
 
+def ouvrir_porte():
+    GPIO.output(RELAY_PIN, GPIO.HIGH)
+    time.sleep(5)
+    GPIO.output(RELAY_PIN, GPIO.LOW)   
+
+def lancer_enigme():
+    lcd1602.clear() 
+    lcd1602.write(0, 0, 'Enigme lance')  
+    subprocess.run(COMMANDE_TEXT)   
+    subprocess.run(PROPOSITION_REPONSES)    
+    lcd1602.write(0,0, "Entrez la reponse:")    
+
 try:
     while True:
-        time.sleep(0.1)
+        mouvement_detecte = SENSOR.motion_detected
+        if mouvement_detecte == True:
+            lcd1602.clear()
+            lcd1602.write(0, 0, 'Mouvement detecte')
+            time.sleep(3)
+            mouvement_detecte = SENSOR.motion_detected
+            lancer_enigme()     
+        else:
+            SENSOR.wait_for_motion()       
+            lcd1602.clear()
+            lcd1602.write(0, 0, 'En attente de mouvement')
+        
 except KeyboardInterrupt:
     GPIO.cleanup()
+    SENSOR.close()
