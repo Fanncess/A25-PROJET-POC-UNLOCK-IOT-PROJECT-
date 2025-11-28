@@ -3,10 +3,8 @@ from CharLCD1602 import CharLCD1602
 
 lcd1602 = CharLCD1602()    
 def get_cpu_temp():     # get CPU temperature from file "/sys/class/thermal/thermal_zone0/temp"
- 
     return 'allo'
 
-    
 def loop():
     lcd1602.init_lcd() 
     count = 0
