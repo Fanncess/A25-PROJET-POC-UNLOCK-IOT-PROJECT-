@@ -3,6 +3,9 @@ import RPi.GPIO as GPIO
 import time
 import csv
 import os
+from MQTT.mqtt_publisher import Mqtt_Publisher
+
+serrure_controle = Mqtt_Publisher()
 
 AUTHORIZED_CARDS = [
     "1A5BAFAD43",
@@ -41,7 +44,8 @@ def indicate_result(authorized):
     """Allume la LED verte ou rouge pendant LED_PULSE secondes."""
     if authorized:
         GPIO.output(LED_GREEN, GPIO.HIGH)
-        time.sleep(LED_PULSE)
+        serrure_controle.send_unlock_signal()
+        time.sleep(3)
         GPIO.output(LED_GREEN, GPIO.LOW)
     else:
         GPIO.output(LED_RED, GPIO.HIGH)

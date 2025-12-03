@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 
 class Mqtt_Publisher:
-    def __init__(self, adresse_ip, port):
+    def __init__(self, adresse_ip = "10.4.1.1", port= 1883):
         self.adresse_ip = adresse_ip
         self.port = port
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)

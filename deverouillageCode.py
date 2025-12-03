@@ -3,6 +3,7 @@ import time
 from CharLCD1602 import CharLCD1602
 import RPi.GPIO as GPIO
 import time
+from MQTT.mqtt_publisher import Mqtt_Publisher
 
 #CONFIGURER LE RELAIS
 RELAY_PIN = 17
@@ -16,6 +17,7 @@ lcd1602.init_lcd(addr=None, bl=1)
 lcd1602.clear()
 lcd1602.write(0, 0, 'SYSTEME PRET')
 lcd1602.write(0, 1, 'Entrer le code :')
+serrure_controle = Mqtt_Publisher()
 
 #CONFIGURER LE CODE SECRET
 CODE_SECRET = "1234" 
@@ -54,9 +56,10 @@ def key_pressed(key):
             lcd1602.clear()
             lcd1602.write(0, 0, 'Code correct!')
             lcd1602.write(0, 1, 'Deverouille...')
-            GPIO.output(RELAY_PIN, GPIO.HIGH)
-            time.sleep(5)
-            GPIO.output(RELAY_PIN, GPIO.LOW)
+            #GPIO.output(RELAY_PIN, GPIO.HIGH)
+            serrure_controle.send_unlock_signal()
+            time.sleep(3)
+            #GPIO.output(RELAY_PIN, GPIO.LOW)
 
              
         else:

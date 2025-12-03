@@ -5,6 +5,8 @@ import RPi.GPIO as GPIO
 import time
 import subprocess
 from gpiozero import MotionSensor
+from MQTT.mqtt_publisher import Mqtt_Publisher
+
 
 #JOUER L'ENIGME VOCALE
 TEXT = "Voici l'énigme ultime pour dévérouiller la porte. " \
@@ -36,6 +38,8 @@ time.sleep(2)
 lcd1602 = CharLCD1602()
 lcd1602.init_lcd(addr=None, bl=1)
 lcd1602.clear()
+serrure_controle = Mqtt_Publisher()
+
 
 #CONFIGURER LE CODE SECRET
 REPONSE = "C" 
@@ -100,10 +104,11 @@ def key_pressed(key):
 keypad.registerKeyPressHandler(key_pressed)
 
 def ouvrir_porte():
-    GPIO.output(RELAY_PIN, GPIO.HIGH)
+    #GPIO.output(RELAY_PIN, GPIO.HIGH)
+    serrure_controle.send_unlock_signal()
     lcd1602.write(0, 1, "Porte ouverte (5s)")
-    time.sleep(5)
-    GPIO.output(RELAY_PIN, GPIO.LOW)  
+    time.sleep(3)
+    #GPIO.output(RELAY_PIN, GPIO.LOW)  
     lcd1602.write(0, 1, "Porte verrouillee")
 
 def lancer_enigme():
