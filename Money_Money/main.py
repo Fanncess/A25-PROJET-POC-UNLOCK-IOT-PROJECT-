@@ -5,7 +5,6 @@ import sys
 import requests 
 from moteur import Moteur
 
-# --- Configuration ---
 
 
 IMAGE_PATH = "./tmp/scan.jpg" 
@@ -25,9 +24,9 @@ def analyze_image(image_path):
         with open(image_path, "rb") as img:
             print(f"Sending {image_path} to Azure for analysis...")
             response = requests.post(
-                kkchose,
+                AZURE_ENDPOINT,
                 headers={
-                    "Prediction-Key": kkchose,
+                    "Prediction-Key": AZURE_PREDICTION_KEY,
                     "Content-Type": "application/octet-stream"
                 },
                 data=img.read()
