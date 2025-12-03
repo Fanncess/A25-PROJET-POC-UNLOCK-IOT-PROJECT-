@@ -3,13 +3,16 @@ import time
 import os
 import sys
 import requests 
-from moteur import Moteur
+from Money_Money.moteur import Moteur
+from MQTT.mqtt_publisher import Mqtt_Publisher
 
+# --- Configuration ---
 
 
 IMAGE_PATH = "./tmp/scan.jpg" 
 
 moteur = Moteur(18)
+serrure_control = Mqtt_Publisher()
 
 os.makedirs(os.path.dirname(IMAGE_PATH), exist_ok=True) 
 
@@ -88,13 +91,15 @@ def analyze_image(image_path):
 picam2 = Picamera2()
 picam2.start()
 print("Camera started. Press Ctrl+C to stop.")
-
+moteur.close()
+moteur.open()
 compteur = 1 
 
 while True:
     print("\n--- New Capture Cycle ---")
     print("Say cheese!")
     time.sleep(1)
+
     
     try:
         picam2.capture_file(IMAGE_PATH) 
@@ -109,6 +114,7 @@ while True:
             print("✅ **ACTION:** Good bill found. Triggering acceptance cycle.")
             moteur.close() 
             moteur.open() 
+            serrure_control.send_unlock_signal()
             
         else: 
             print("No bill detected or confidence too low. No motor action taken.")
