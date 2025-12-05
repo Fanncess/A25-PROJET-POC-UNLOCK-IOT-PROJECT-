@@ -4,10 +4,6 @@ import RPi.GPIO as GPIO
 import time
 from MQTT.mqtt_publisher import Mqtt_Publisher
 from keypadFactory import create_keypad
-from relaiManager import RelayManager
-
-#CONFIGURER LE RELAIS
-relay = RelayManager(pin=17)
 
 #INITIALISER LE CODE
 lcd1602 = LCDManager()
@@ -36,11 +32,9 @@ def key_pressed(key):
     if len(ENTERED_CODE) == len(CODE_SECRET):
         if ENTERED_CODE == CODE_SECRET :
             lcd1602.clear()
+            serrure_controle.send_unlock_signal()            
             lcd1602.write(0, 0, 'Code correct!')
             lcd1602.write(0, 1, 'Deverouille...')
-            serrure_controle.send_unlock_signal()
-            relay.unlock(3)   
-             
         else:
             lcd1602.clear()
             lcd1602.write(0, 0, 'Code incorrect!')

@@ -6,7 +6,6 @@ import subprocess
 from gpiozero import MotionSensor
 from MQTT.mqtt_publisher import Mqtt_Publisher
 from keypadFactory import create_keypad
-from relaiManager import RelayManager
 
 #JOUER L'ENIGME VOCALE
 TEXT = "Voici l'énigme ultime pour dévérouiller la porte. " \
@@ -21,9 +20,6 @@ COMMANDE_TEXT = VOICE + [TEXT]
 PROPOSITION_REPONSES = VOICE + [PROPOSITION]
 ANNONCE_BONNE_REPONSE = VOICE + [BONNE_REPONSE]
 ANNONCE_MAUVAISE_REPONSE= VOICE + [MAUVAISE_REPONSE]
-
-#CONFIGURER LE RELAIS
-relay = RelayManager(pin=17)
 
 #CONFIGURER LE CAPTEUR DE MOUVEMENT
 SENSOR_PIN = 18
@@ -84,7 +80,6 @@ def key_pressed(key):
 def ouvrir_porte():   
     serrure_controle.send_unlock_signal()
     lcd1602.write(0, 1, "Porte ouverte")
-    relay.unlock(3) 
     lcd1602.write(0, 1, "Porte verrouillee")
 
 def lancer_enigme():
