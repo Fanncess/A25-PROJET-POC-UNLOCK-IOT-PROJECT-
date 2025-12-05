@@ -4,9 +4,7 @@ from CharLCD1602 import CharLCD1602
 import RPi.GPIO as GPIO
 import time
 from MQTT.mqtt_publisher import Mqtt_Publisher
-from keypad_factory import create_keypad
-
-keypad = create_keypad(key_pressed)
+from keypadFactory import create_keypad
 
 #CONFIGURER LE RELAIS
 RELAY_PIN = 17
@@ -60,6 +58,8 @@ def key_pressed(key):
         ENTERED_CODE = ""
         lcd1602.clear()
         lcd1602.write(0,0, "Entrez le code:")
+
+keypad = create_keypad(key_pressed)
 
 try:
     while True:

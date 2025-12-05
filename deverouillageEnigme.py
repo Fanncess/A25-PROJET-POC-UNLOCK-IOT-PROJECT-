@@ -1,4 +1,3 @@
-from pad4pi import rpi_gpio
 import time
 from CharLCD1602 import CharLCD1602
 import RPi.GPIO as GPIO
@@ -6,9 +5,7 @@ import time
 import subprocess
 from gpiozero import MotionSensor
 from MQTT.mqtt_publisher import Mqtt_Publisher
-from keypad_factory import create_keypad
-keypad = create_keypad(key_pressed)
-
+from keypadFactory import create_keypad
 
 #JOUER L'ENIGME VOCALE
 TEXT = "Voici l'énigme ultime pour dévérouiller la porte. " \
@@ -41,7 +38,6 @@ lcd1602 = CharLCD1602()
 lcd1602.init_lcd(addr=None, bl=1)
 lcd1602.clear()
 serrure_controle = Mqtt_Publisher()
-
 
 #CONFIGURER LE CODE SECRET
 REPONSE = "C" 
@@ -122,6 +118,8 @@ def reset_system():
     ENTERED_CODE = ""
     lcd1602.clear()
     lcd1602.write(0, 0, 'En attente de mouvement')
+
+keypad = create_keypad(key_pressed)
 
 try:
     lcd1602.write(0, 0, 'Systeme pret')
