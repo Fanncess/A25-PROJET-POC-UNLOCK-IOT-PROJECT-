@@ -1,4 +1,3 @@
-from pad4pi import rpi_gpio
 import time
 from lcdManager import LCDManager
 import RPi.GPIO as GPIO

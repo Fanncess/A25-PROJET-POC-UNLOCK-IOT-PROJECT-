@@ -84,7 +84,7 @@ def key_pressed(key):
 def ouvrir_porte():
     relay.unlock()    
     serrure_controle.send_unlock_signal()
-    lcd1602.write(0, 1, "Porte ouverte (5s)")
+    lcd1602.write(0, 1, "Porte ouverte")
     time.sleep(3)
     lcd1602.write(0, 1, "Porte verrouillee")
 
