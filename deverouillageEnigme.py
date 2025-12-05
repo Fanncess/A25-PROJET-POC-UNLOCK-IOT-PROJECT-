@@ -79,8 +79,9 @@ def key_pressed(key):
 
 def ouvrir_porte():   
     serrure_controle.send_unlock_signal()
-    lcd1602.write(0, 1, "Porte ouverte")
-    lcd1602.write(0, 1, "Porte verrouillee")
+    lcd1602.write(0, 0, "Porte ouverte")
+    time.sleep(3)
+    lcd1602.write(0, 0, "Porte verrouillee")
 
 def lancer_enigme():
     global ENIGME_ACTIVE, EN_ATTENTE
