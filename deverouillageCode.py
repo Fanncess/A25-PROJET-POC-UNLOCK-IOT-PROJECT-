@@ -4,6 +4,9 @@ from CharLCD1602 import CharLCD1602
 import RPi.GPIO as GPIO
 import time
 from MQTT.mqtt_publisher import Mqtt_Publisher
+from keypad_factory import create_keypad
+
+keypad = create_keypad(key_pressed)
 
 #CONFIGURER LE RELAIS
 RELAY_PIN = 17
@@ -22,20 +25,6 @@ serrure_controle = Mqtt_Publisher()
 #CONFIGURER LE CODE SECRET
 CODE_SECRET = "1234" 
 ENTERED_CODE = ""
-
-#CONFIGURER LE CLAVIER
-KEYPAD = [
-    ['1', '2', '3', 'A'],
-    ['4', '5', '6', 'B'],
-    ['7', '8', '9', 'C'],
-    ['*', '0', '#', 'D']
-]
-ROW_PINS = [5, 6, 13, 19]
-COL_PINS = [12, 16, 20, 21]
-ENTERED_CODE = ""
-
-factory = rpi_gpio.KeypadFactory()
-keypad = factory.create_keypad(keypad=KEYPAD, row_pins=ROW_PINS, col_pins=COL_PINS)
 
 #DEFINITION DE LA FONCTION A APPELER A CHAQUE TOUCHE
 def key_pressed(key):
@@ -71,8 +60,6 @@ def key_pressed(key):
         ENTERED_CODE = ""
         lcd1602.clear()
         lcd1602.write(0,0, "Entrez le code:")
-
-keypad.registerKeyPressHandler(key_pressed)
 
 try:
     while True:

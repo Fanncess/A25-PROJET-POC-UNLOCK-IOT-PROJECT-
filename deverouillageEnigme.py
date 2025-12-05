@@ -6,6 +6,8 @@ import time
 import subprocess
 from gpiozero import MotionSensor
 from MQTT.mqtt_publisher import Mqtt_Publisher
+from keypad_factory import create_keypad
+keypad = create_keypad(key_pressed)
 
 
 #JOUER L'ENIGME VOCALE
@@ -47,20 +49,6 @@ ENTERED_CODE = ""
 ENIGME_ACTIVE = False
 EN_ATTENTE = False
 
-#CONFIGURER LE CLAVIER
-KEYPAD = [
-    ['1', '2', '3', 'A'],
-    ['4', '5', '6', 'B'],
-    ['7', '8', '9', 'C'],
-    ['*', '0', '#', 'D']
-]
-ROW_PINS = [5, 6, 13, 19]
-COL_PINS = [12, 16, 20, 21]
-ENTERED_CODE = ""
-
-factory = rpi_gpio.KeypadFactory()
-keypad = factory.create_keypad(keypad=KEYPAD, row_pins=ROW_PINS, col_pins=COL_PINS)
-
 def key_pressed(key):
     """Gère l'entrée du clavier."""
     global ENTERED_CODE, ENIGME_ACTIVE, EN_ATTENTE
@@ -100,8 +88,6 @@ def key_pressed(key):
         time.sleep(1)
         lcd1602.write(0, 0, f'Reponse: {ENTERED_CODE}')
         lcd1602.write(0, 1, "Entrez la reponse:")
-
-keypad.registerKeyPressHandler(key_pressed)
 
 def ouvrir_porte():
     #GPIO.output(RELAY_PIN, GPIO.HIGH)
