@@ -1,6 +1,6 @@
 from pad4pi import rpi_gpio
 import time
-from CharLCD1602 import CharLCD1602
+from lcdManager import LCDManager
 import RPi.GPIO as GPIO
 import time
 from MQTT.mqtt_publisher import Mqtt_Publisher
@@ -13,9 +13,7 @@ GPIO.setup(RELAY_PIN, GPIO.OUT)
 GPIO.output(RELAY_PIN, GPIO.LOW)
 
 #INITIALISER LE CODE
-lcd1602 = CharLCD1602()
-lcd1602.init_lcd(addr=None, bl=1)
-lcd1602.clear()
+lcd1602 = LCDManager()
 lcd1602.write(0, 0, 'SYSTEME PRET')
 lcd1602.write(0, 1, 'Entrer le code :')
 serrure_controle = Mqtt_Publisher()

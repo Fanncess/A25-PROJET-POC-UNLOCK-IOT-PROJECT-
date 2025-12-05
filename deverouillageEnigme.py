@@ -1,5 +1,5 @@
 import time
-from CharLCD1602 import CharLCD1602
+from lcdManager import LCDManager
 import RPi.GPIO as GPIO
 import time
 import subprocess
@@ -34,9 +34,7 @@ SENSOR.wait_for_no_motion()
 time.sleep(2)  
 
 #INITIALISER LE CODE
-lcd1602 = CharLCD1602()
-lcd1602.init_lcd(addr=None, bl=1)
-lcd1602.clear()
+lcd1602 = LCDManager()
 serrure_controle = Mqtt_Publisher()
 
 #CONFIGURER LE CODE SECRET
