@@ -3,7 +3,7 @@
 ## 📘 Description du projet
 
 UNLOCK est un projet IoT ayant pour objectif de concevoir un **système de déverrouillage intelligent** à l’aide d’un **Raspberry Pi**.  
-Le système permet d’ouvrir une porte selon **différentes méthodes de déverrouillage**, toutes reliées à un **broker MQTT** servant de point central de communication.
+Le système permet d’ouvrir une porte selon **différentes méthodes de déverrouillage**, toutes reliées en utilisant un **broker MQTT** servant de point central de communication.
 
 Ce projet a été réalisé à des fins **pédagogiques** dans le cadre du cours *Programmation d’objets connectés*.
 
@@ -13,7 +13,7 @@ Ce projet a été réalisé à des fins **pédagogiques** dans le cadre du cours
 
 Le projet vise à démontrer :
 - l’intégration du **matériel et du logiciel** en IoT,
-- la communication entre modules via **MQTT**,
+- la communication entre modules via protocole **MQTT**,
 - la mise en place de **plusieurs méthodes de déverrouillage** autour d’un même système.
 
 ---
@@ -23,10 +23,11 @@ Le projet vise à démontrer :
 Le système est composé de plusieurs modules indépendants reliés par un **broker MQTT**.
 
 1. Un module valide un accès (code, énigme, RFID ou détection d’objet).
-2. Le module publie un message au broker MQTT.
-3. Le module central reçoit le message.
-4. La serrure est déverrouillée pendant un temps défini.
-5. La porte se reverrouille automatiquement.
+2. Le module publie un message au broker MQTT dans un sujet "serrure_controle".
+3. Le module central est abonné au sujet "serrure_controle" sur le broker.
+4. Le module central fait la gestion de la serrure. Il la déverrouille lorsque le sujet auquel il est abonné reçoit le message correspondant.
+5. La serrure est déverrouillée pendant un temps défini.
+6. La porte se reverrouille automatiquement.
 
 ---
 
@@ -135,7 +136,7 @@ Toutes les dépendances sont listées dans le fichier `requirements.txt`.
 - L’utilisateur entre un code à 4 chiffres sur le clavier.
 - Le code est validé par le système.
 - Un message est affiché sur l’écran LCD.
-- Si le code est correct, un message MQTT est envoyé.
+- Si le code est correct, un message est envoyé dans le sujet "serrure_controle" du broker MQTT.
 
 ---
 
@@ -143,7 +144,7 @@ Toutes les dépendances sont listées dans le fichier `requirements.txt`.
 - Le capteur de mouvement détecte une présence.
 - Une énigme est proposée à l’utilisateur.
 - L’utilisateur sélectionne une réponse à l’aide des boutons.
-- En cas de bonne réponse, la porte s’ouvre.
+- En cas de bonne réponse un message est envoyé dans le sujet "serrure_controle" du broker MQTT.
 
 ---
 
@@ -151,7 +152,9 @@ Toutes les dépendances sont listées dans le fichier `requirements.txt`.
 - La caméra Raspberry Pi capture une image.
 - L’image est envoyée au service **Azure Computer Vision**.
 - Le service analyse l’image afin d’identifier un **billet canadien**.
-- Si le billet attendu est reconnu, le servo moteur est activé et la porte s’ouvre.
+- Si un billet est reconnu:
+  - le servo moteur est activé pour "prendre" l'argent. 
+  - Un message est envoyé dans le sujet "serrure_controle" du broker MQTT
 - Sinon, l’accès est refusé.
 
 ---
@@ -159,7 +162,10 @@ Toutes les dépendances sont listées dans le fichier `requirements.txt`.
 ### ✅ Déverrouillage par carte RFID
 - Le lecteur RC522 lit l’UID de la carte RFID.
 - L’UID est comparé à une liste de cartes autorisées.
-- Une LED verte s’allume si l’accès est autorisé, rouge sinon.
+- Si l’accès est autorisé:
+  - Une LED verte s’allume 
+  - Un message est envoyé dans le sujet "serrure_controle" du broker MQTT
+- Sinon une LED rouge s’allume.
 - Les accès sont enregistrés dans un fichier CSV.
 
 ---
@@ -169,7 +175,7 @@ Toutes les dépendances sont listées dans le fichier `requirements.txt`.
 Le broker MQTT sert de **point central** du système.
 - Chaque module publie un message lorsqu’un accès est validé.
 - Le module principal est abonné aux messages.
-- Lorsqu’un message est reçu, la porte est déverrouillée puis reverrouillée.
+- Lorsqu’un message est reçu dans le sujet du broker, la porte est déverrouillée puis reverrouillée.
 
 ---
 
@@ -177,10 +183,14 @@ Le broker MQTT sert de **point central** du système.
 
 Le dépôt GitHub contient :
 - les scripts Python pour chaque méthode de déverrouillage,
-- les scripts MQTT,
+- différentes classe:
+  - Moteur, gère le controle du servo moteur avec le module d'IA
+  - Deverrouillage, incluant la classe Mqtt_Subscriber, gère le controle de la serrure
+  - Mqtt_Publisher, importée dans chaque script de déverrouillage, gère l'envoie des messages dans le sujet sur le broker
+  - Mqtt_Subscriber, importée dans le script controllant la serrure, gère l'abonnement au sujet sur le broker
 - un fichier `requirements.txt`,
 - ce fichier README,
-- des fichiers utilitaires (affichage LCD, contrôle moteur, journalisation).
+- des fichiers utilitaires (affichage LCD, journalisation).
 
 ---
 

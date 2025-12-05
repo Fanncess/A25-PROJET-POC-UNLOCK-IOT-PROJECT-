@@ -3,7 +3,7 @@ import time
 import os
 import sys
 import requests 
-from Money_Money.moteur import Moteur
+from moteur import Moteur
 from MQTT.mqtt_publisher import Mqtt_Publisher
 
 # --- Configuration ---
