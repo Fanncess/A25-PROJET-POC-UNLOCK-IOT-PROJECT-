@@ -38,10 +38,8 @@ def key_pressed(key):
             lcd1602.clear()
             lcd1602.write(0, 0, 'Code correct!')
             lcd1602.write(0, 1, 'Deverouille...')
-            relay.unlock()   
             serrure_controle.send_unlock_signal()
-            time.sleep(3)
-
+            relay.unlock(3)   
              
         else:
             lcd1602.clear()

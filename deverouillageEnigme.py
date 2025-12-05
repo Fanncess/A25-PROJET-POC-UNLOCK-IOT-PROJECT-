@@ -81,11 +81,10 @@ def key_pressed(key):
         lcd1602.write(0, 0, f'Reponse: {ENTERED_CODE}')
         lcd1602.write(0, 1, "Entrez la reponse:")
 
-def ouvrir_porte():
-    relay.unlock()    
+def ouvrir_porte():   
     serrure_controle.send_unlock_signal()
     lcd1602.write(0, 1, "Porte ouverte")
-    time.sleep(3)
+    relay.unlock(3) 
     lcd1602.write(0, 1, "Porte verrouillee")
 
 def lancer_enigme():
