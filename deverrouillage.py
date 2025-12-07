@@ -10,22 +10,22 @@ class Deverrouillage:
         self.UNLOCK_TIME = 3
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.RELAY_PIN, GPIO.OUT)
-        self.Verrouiller()
+        self.verrouiller()
 
     def reception_mqtt(self, message):
         if message == "1":
-            self.Deverrouiller()
+            self.deverrouiller()
         elif message == "0":
-            self.Verrouiller()
+            self.verrouiller()
 
 
-    def Verrouiller(self):    
+    def verrouiller(self):    
         GPIO.output(self.RELAY_PIN, GPIO.LOW)
         print("LOCK")
 
-    def Deverrouiller(self):    
+    def deverrouiller(self):    
         GPIO.output(self.RELAY_PIN, GPIO.HIGH)
         print("UNLOCK for %u seconds" %self.UNLOCK_TIME)
         time.sleep(self.UNLOCK_TIME)
-        self.Verrouiller()
+        self.verrouiller()
 
