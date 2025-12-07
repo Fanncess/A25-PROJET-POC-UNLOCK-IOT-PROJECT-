@@ -15,7 +15,7 @@ class Mqtt_Subscriber:
     # The callback for when the client receives a CONNACK response from the server.
     def on_connect(self, client, userdata, flags, reason_code, properties):
         print(f"Connected with result code {reason_code}")
-        client.subscribe("serrure_controle")
+        client.subscribe("serrure_controle", qos=1)
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
